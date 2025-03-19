@@ -160,6 +160,12 @@
     function spawnPopcorn() { popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
     function spawnKitkat() { kitkats.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
 
+    function drawItems(items, imagePath) {
+      items.forEach(item => {
+        ctx.drawImage(images[imagePath], item.x, item.y, 50, 50);
+      });
+    }
+
     function startGame() {
       if (imagesLoaded !== imagePaths.length) {
         console.error('Images are not loaded yet. Please wait.');
@@ -173,6 +179,10 @@
     function update() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(images['gunjan.png'], player.x, player.y, player.size, player.size);
+      drawItems(snacks, 'snack.png');
+      drawItems(coffees, 'cold-coffee.png');
+      drawItems(popcorns, 'popcorn.png');
+      drawItems(kitkats, 'kitkat.png');
       requestAnimationFrame(update);
     }
 
