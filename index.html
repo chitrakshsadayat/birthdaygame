@@ -148,6 +148,22 @@
       }
     }
 
+    function spawnSnack() {
+      snacks.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
+    function spawnCoffee() {
+      coffees.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
+    function spawnPopcorn() {
+      popcorns.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
+    function spawnKitkat() {
+      kitkats.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
     function startGame() {
       startButton.style.display = 'none';
       for (let i = 0; i < 7; i++) spawnSnack();
