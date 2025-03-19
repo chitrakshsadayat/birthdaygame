@@ -25,7 +25,7 @@
     #startButton {
       display: none;
       position: absolute;
-      top: 20px;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
       padding: 12px 24px;
@@ -40,8 +40,7 @@
     #score {
       position: absolute;
       top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      right: 20px;
       font-size: 30px;
       font-weight: bold;
       color: #ff4500;
@@ -146,22 +145,6 @@
         dialogueBox.style.display = 'none';
         startButton.style.display = 'block';
       }
-    }
-
-    function spawnSnack() {
-      snacks.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
-    function spawnCoffee() {
-      coffees.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
-    function spawnPopcorn() {
-      popcorns.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
-    function spawnKitkat() {
-      kitkats.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
     }
 
     function startGame() {
