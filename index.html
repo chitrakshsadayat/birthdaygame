@@ -166,6 +166,19 @@
       });
     }
 
+    function checkCollision(items) {
+      items.forEach((item, index) => {
+        const dx = player.x - item.x;
+        const dy = player.y - item.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < 75) {
+          items.splice(index, 1);
+          score++;
+          scoreDisplay.textContent = `Score: ${score}`;
+        }
+      });
+    }
+
     function startGame() {
       if (imagesLoaded !== imagePaths.length) {
         console.error('Images are not loaded yet. Please wait.');
@@ -183,6 +196,10 @@
       drawItems(coffees, 'cold-coffee.png');
       drawItems(popcorns, 'popcorn.png');
       drawItems(kitkats, 'kitkat.png');
+      checkCollision(snacks);
+      checkCollision(coffees);
+      checkCollision(popcorns);
+      checkCollision(kitkats);
       requestAnimationFrame(update);
     }
 
