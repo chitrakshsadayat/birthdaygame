@@ -29,7 +29,7 @@ body, html {
   width: 100vw;
   height: 100vh;
   background-color: #a0d8ef;
-  border: 2px solid black;
+  border: 2px solid red; /* Debugging with red border */
 }
 
 #startButton {
@@ -67,6 +67,11 @@ const snackImage = new Image();
 snackImage.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
 snackImage.onload = () => console.log('Snack image loaded. Game is ready.');
 snackImage.onerror = () => console.error('Failed to load snack image. Using fallback.');
+
+// Test for visibility
+ctx.fillStyle = 'blue';
+ctx.fillRect(10, 10, 100, 100);
+console.log('Test rectangle drawn.');
 
 function drawPlayer() {
   console.log('Attempting to draw player.');
