@@ -52,7 +52,7 @@
 
     .dialogue-box {
       position: absolute;
-      bottom: 20px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       width: 80%;
@@ -147,12 +147,36 @@
       }
     }
 
+    function spawnSnack() {
+      snacks.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
+    function spawnCoffee() {
+      coffees.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
+    function spawnPopcorn() {
+      popcorns.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
+    function spawnKitkat() {
+      kitkats.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
+    }
+
     function startGame() {
       for (let i = 0; i < 7; i++) spawnSnack();
       for (let i = 0; i < 4; i++) spawnCoffee();
       for (let i = 0; i < 4; i++) spawnPopcorn();
       for (let i = 0; i < 4; i++) spawnKitkat();
       update();
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPlayer();
+      drawSnacks();
+      checkCollision();
+      requestAnimationFrame(update);
     }
 
     function drawPlayer() {
@@ -165,28 +189,6 @@
       popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 70, 70));
       kitkats.forEach(kitkat => ctx.drawImage(kitkatImage, kitkat.x, kitkat.y, 70, 70));
     }
-
-    function checkCollision() {
-      if (!snacks.length && !coffees.length && !popcorns.length && !kitkats.length) {
-        setTimeout(() => {
-          alert('Happy Birthday Gunjan! 🎉 You won!');
-          backgroundMusic.play();
-        }, 200);
-      }
-    }
-
-    function update() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPlayer();
-      drawSnacks();
-      checkCollision();
-      requestAnimationFrame(update);
-    }
-
-    document.getElementById('left').addEventListener('click', () => player.x -= player.speed);
-    document.getElementById('right').addEventListener('click', () => player.x += player.speed);
-    document.getElementById('up').addEventListener('click', () => player.y -= player.speed);
-    document.getElementById('down').addEventListener('click', () => player.y += player.speed);
 
     showDialogue();
   </script>
