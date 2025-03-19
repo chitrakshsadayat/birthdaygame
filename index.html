@@ -23,8 +23,9 @@
     }
 
     #startButton {
+      display: none;
       position: absolute;
-      top: 20px;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
       padding: 12px 24px;
@@ -38,11 +39,28 @@
 
     #score {
       position: absolute;
-      top: 70px;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff4500;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 12px;
+    }
+
+    .dialogue-box {
+      position: absolute;
+      bottom: 120px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 24px;
-      color: #000;
+      width: 80%;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 18px;
+      border-radius: 12px;
+      text-align: center;
     }
 
     .controls {
@@ -55,12 +73,13 @@
     }
 
     .control-btn {
-      width: 50px;
-      height: 50px;
-      background: pink;
+      width: 60px;
+      height: 60px;
+      background: #ff69b4;
+      color: white;
       border: none;
       border-radius: 50%;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -68,9 +87,10 @@
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <button id="startButton">Bring it on</button>
+  <button id="startButton">Start Game</button>
   <div id="score">Score: 0</div>
   <audio id="backgroundMusic" src="aye-hip-hopper.mp3" loop></audio>
+  <div class="dialogue-box" id="dialogueBox"></div>
 
   <div class="controls">
     <button class="control-btn" id="left">⬅</button>
@@ -93,14 +113,18 @@
     snackImage.src = 'snack.png';
     const popcornImage = new Image();
     popcornImage.src = 'popcorn.png';
+    const kitkatImage = new Image();
+    kitkatImage.src = 'kitkat.png';
 
     const player = { x: canvas.width / 2, y: canvas.height / 2, size: 100, speed: 8 };
     let score = 0;
     const snacks = [];
     const coffees = [];
     const popcorns = [];
+    const kitkats = [];
     const scoreDisplay = document.getElementById('score');
-    const backgroundMusic = document.getElementById('backgroundMusic');
+    const dialogueBox = document.getElementById('dialogueBox');
+    const startButton = document.getElementById('startButton');
 
     const dialogues = [
       "Sara: Hey Gunjan! Ready for an adventure?",
@@ -112,79 +136,35 @@
 
     let currentDialogue = 0;
 
-    function displayDialogue() {
+    function showDialogue() {
       if (currentDialogue < dialogues.length) {
-        alert(dialogues[currentDialogue]);
+        dialogueBox.innerText = dialogues[currentDialogue];
         currentDialogue++;
+        setTimeout(showDialogue, 3000);
       } else {
-        startGame();
+        dialogueBox.style.display = 'none';
+        startButton.style.display = 'block';
       }
     }
 
+    function spawnSnack() { snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+    function spawnCoffee() { coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+    function spawnPopcorn() { popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+    function spawnKitkat() { kitkats.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+
+    function drawSnacks() { snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 50, 50)); }
+    function drawCoffees() { coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 50, 50)); }
+    function drawPopcorns() { popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 50, 50)); }
+    function drawKitkats() { kitkats.forEach(kitkat => ctx.drawImage(kitkatImage, kitkat.x, kitkat.y, 50, 50)); }
+
     function startGame() {
-      for (let i = 0; i < 7; i++) spawnSnack();
-      for (let i = 0; i < 3; i++) spawnCoffee();
-      for (let i = 0; i < 4; i++) spawnPopcorn();
+      startButton.style.display = 'none';
+      for (let i = 0; i < 5; i++) { spawnSnack(); spawnCoffee(); spawnPopcorn(); spawnKitkat(); }
       update();
     }
 
-    function drawPlayer() {
-      ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
-    }
-
-    function drawSnacks() {
-      snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 50, 50));
-      coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 50, 50));
-      popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 50, 50));
-    }
-
-    function spawnSnack() {
-      snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
-    }
-
-    function spawnCoffee() {
-      coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
-    }
-
-    function spawnPopcorn() {
-      popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
-    }
-
-    function checkCollision() {
-      snacks.forEach((snack, index) => {
-        const dx = player.x - snack.x;
-        const dy = player.y - snack.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 75) {
-          snacks.splice(index, 1);
-          score++;
-          scoreDisplay.textContent = `Score: ${score}`;
-          if (score === 10) {
-            setTimeout(() => {
-              alert('Happy Birthday Gunjan! 🎉 You won!');
-              backgroundMusic.play();
-            }, 200);
-          }
-        }
-      });
-    }
-
-    function update() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPlayer();
-      drawSnacks();
-      checkCollision();
-      requestAnimationFrame(update);
-    }
-
-    document.getElementById('left').addEventListener('click', () => player.x -= player.speed);
-    document.getElementById('right').addEventListener('click', () => player.x += player.speed);
-    document.getElementById('up').addEventListener('click', () => player.y -= player.speed);
-    document.getElementById('down').addEventListener('click', () => player.y += player.speed);
-
-    document.getElementById('startButton').onclick = () => {
-      displayDialogue();
-    };
+    startButton.addEventListener('click', startGame);
+    showDialogue();
   </script>
 </body>
 </html>
