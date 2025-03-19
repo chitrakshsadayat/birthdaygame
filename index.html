@@ -4,13 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Birthday Quest for Gunjan</title>
+  <title>Gunjan's Birthday Quest</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
   <button id="startButton">Bring it on</button>
   <div id="score">Score: 0</div>
+  <audio id="backgroundMusic" src="aye-hip-hopper.mp3" loop></audio>
   <script src="script.js"></script>
 </body>
 </html>
@@ -23,14 +24,14 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f5dc;
+  background-color: #ffe4e1;
 }
 
 #gameCanvas {
   width: 100vw;
   height: 100vh;
-  background-color: #a0d8ef;
-  border: 2px solid red; /* Debugging with red border */
+  background-image: url('europe-bg.jpg');
+  background-size: cover;
 }
 
 #startButton {
@@ -40,7 +41,7 @@ body, html {
   transform: translateX(-50%);
   padding: 12px 24px;
   font-size: 20px;
-  background-color: #4CAF50;
+  background-color: #ff69b4;
   color: white;
   border: none;
   cursor: pointer;
@@ -64,56 +65,33 @@ canvas.height = window.innerHeight;
 
 const gunjanImage = new Image();
 gunjanImage.src = 'gunjan.png';
-
-gunjanImage.onload = () => console.log('Gunjan image loaded successfully.');
-gunjanImage.onerror = () => console.error('Failed to load Gunjan image. Check the file path or image format.');
-
-const snacks = [];
+const coldCoffeeImage = new Image();
+coldCoffeeImage.src = 'cold-coffee.png';
 const snackImage = new Image();
-snackImage.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
-snackImage.onload = () => console.log('Snack image loaded. Game is ready.');
-snackImage.onerror = () => console.error('Failed to load snack image. Using fallback.');
+snackImage.src = 'snack.png';
 
+const player = { x: canvas.width / 2, y: canvas.height / 2, size: 100, speed: 8 };
 let score = 0;
+const snacks = [];
+const coffees = [];
 const scoreDisplay = document.getElementById('score');
-
-const player = {
-  x: canvas.width / 2,
-  y: canvas.height / 2,
-  size: 100,
-  speed: 8
-};
-
-const keys = {};
+const backgroundMusic = document.getElementById('backgroundMusic');
 
 function drawPlayer() {
-  if (gunjanImage.complete && gunjanImage.naturalWidth > 0) {
-    ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
-  } else {
-    ctx.fillStyle = 'green';
-    ctx.fillRect(player.x, player.y, player.size, player.size);
-  }
+  ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
 }
 
 function drawSnacks() {
-  snacks.forEach(snack => {
-    if (snackImage.complete && snackImage.naturalWidth > 0) {
-      ctx.drawImage(snackImage, snack.x, snack.y, 50, 50);
-    } else {
-      ctx.fillStyle = 'orange';
-      ctx.beginPath();
-      ctx.arc(snack.x, snack.y, 25, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  });
+  snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 50, 50));
+  coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 50, 50));
 }
 
 function spawnSnack() {
-  const margin = 60;
-  snacks.push({
-    x: Math.random() * (canvas.width - margin),
-    y: Math.random() * (canvas.height - margin)
-  });
+  snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
+}
+
+function spawnCoffee() {
+  coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
 }
 
 function checkCollision() {
@@ -121,7 +99,6 @@ function checkCollision() {
     const dx = player.x - snack.x;
     const dy = player.y - snack.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-
     if (distance < 75) {
       snacks.splice(index, 1);
       score++;
@@ -129,6 +106,17 @@ function checkCollision() {
       if (score === 5) {
         setTimeout(() => alert('Happy Birthday Gunjan! 🎉 You won!'), 200);
       }
+    }
+  });
+
+  coffees.forEach((coffee, index) => {
+    const dx = player.x - coffee.x;
+    const dy = player.y - coffee.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance < 75) {
+      coffees.splice(index, 1);
+      player.speed += 4;
+      setTimeout(() => player.speed -= 4, 5000);
     }
   });
 }
@@ -147,11 +135,13 @@ function update() {
   requestAnimationFrame(update);
 }
 
-document.getElementById('startButton').onclick = () => {
-  console.log('Button clicked. Starting the game.');
-  for (let i = 0; i < 5; i++) spawnSnack();
-  update();
-};
-
+const keys = {};
 document.addEventListener('keydown', (e) => keys[e.key] = true);
 document.addEventListener('keyup', (e) => keys[e.key] = false);
+
+document.getElementById('startButton').onclick = () => {
+  backgroundMusic.play();
+  for (let i = 0; i < 5; i++) spawnSnack();
+  for (let i = 0; i < 2; i++) spawnCoffee();
+  update();
+};
