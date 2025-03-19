@@ -76,7 +76,7 @@ function drawPlayer() {
   }
   console.log('Drawing player on canvas.');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(gunjanImage, canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
+  ctx.drawImage(gunjanImage, (canvas.width - 100) / 2, (canvas.height - 100) / 2, 100, 100);
 
   snacks.forEach(snack => {
     if (snackImage.complete && snackImage.naturalWidth > 0) {
@@ -93,7 +93,11 @@ function drawPlayer() {
 }
 
 function spawnSnack() {
-  snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
+  const margin = 60;
+  snacks.push({
+    x: Math.random() * (canvas.width - margin),
+    y: Math.random() * (canvas.height - margin)
+  });
 }
 
 function update() {
