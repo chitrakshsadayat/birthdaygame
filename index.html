@@ -76,7 +76,9 @@ console.log('Test rectangle drawn.');
 function drawPlayer() {
   console.log('Attempting to draw player.');
   if (!gunjanImage.complete || gunjanImage.naturalWidth === 0) {
-    console.error('Image not loaded, skipping draw.');
+    console.warn('Gunjan image failed to draw. Drawing fallback instead.');
+    ctx.fillStyle = 'green';
+    ctx.fillRect((canvas.width - 100) / 2, (canvas.height - 100) / 2, 100, 100);
     return;
   }
   console.log('Drawing player on canvas.');
