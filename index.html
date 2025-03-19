@@ -169,6 +169,13 @@
       }
     }
 
+    function startGame() {
+      console.log('Game Started');
+      startButton.style.display = 'none';
+      score = 0;
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
+
     function checkGameEnd() {
       if (snacks.length === 0 && coffees.length === 0 && popcorns.length === 0 && kitkats.length === 0) {
         congratsMessage.style.display = 'block';
