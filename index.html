@@ -122,10 +122,10 @@
       drawSnacks();
       checkCollision();
 
-      if (keys['ArrowUp']) player.y -= player.speed;
-      if (keys['ArrowDown']) player.y += player.speed;
-      if (keys['ArrowLeft']) player.x -= player.speed;
-      if (keys['ArrowRight']) player.x += player.speed;
+      if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
+      if (keys['ArrowDown'] && player.y + player.size < canvas.height) player.y += player.speed;
+      if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+      if (keys['ArrowRight'] && player.x + player.size < canvas.width) player.x += player.speed;
 
       requestAnimationFrame(update);
     }
@@ -137,7 +137,7 @@
     document.getElementById('startButton').onclick = () => {
       backgroundMusic.play();
       for (let i = 0; i < 5; i++) spawnSnack();
-      for (let i = 2; i < 2; i++) spawnCoffee();
+      for (let i = 0; i < 2; i++) spawnCoffee();
       update();
     };
   </script>
