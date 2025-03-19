@@ -10,6 +10,7 @@
 <body>
   <canvas id="gameCanvas"></canvas>
   <button id="startButton">Bring it on</button>
+  <div id="score">Score: 0</div>
   <script src="script.js"></script>
 </body>
 </html>
@@ -46,15 +47,20 @@ body, html {
   border-radius: 8px;
 }
 
+#score {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: #000;
+}
+
 // script.js
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
-if (!ctx) {
-  console.error('Canvas context not found. Please check the canvas element.');
-}
 
 const gunjanImage = new Image();
 gunjanImage.src = 'gunjan.png';
@@ -68,29 +74,32 @@ snackImage.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
 snackImage.onload = () => console.log('Snack image loaded. Game is ready.');
 snackImage.onerror = () => console.error('Failed to load snack image. Using fallback.');
 
-// Test for visibility
-ctx.fillStyle = 'blue';
-ctx.fillRect(10, 10, 100, 100);
-console.log('Test rectangle drawn.');
+let score = 0;
+const scoreDisplay = document.getElementById('score');
+
+const player = {
+  x: canvas.width / 2,
+  y: canvas.height / 2,
+  size: 100,
+  speed: 8
+};
+
+const keys = {};
 
 function drawPlayer() {
-  console.log('Attempting to draw player.');
-  if (!gunjanImage.complete || gunjanImage.naturalWidth === 0) {
-    console.warn('Gunjan image failed to draw. Drawing fallback instead.');
+  if (gunjanImage.complete && gunjanImage.naturalWidth > 0) {
+    ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
+  } else {
     ctx.fillStyle = 'green';
-    ctx.fillRect((canvas.width - 100) / 2, (canvas.height - 100) / 2, 100, 100);
-    return;
+    ctx.fillRect(player.x, player.y, player.size, player.size);
   }
-  console.log('Drawing player on canvas.');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(gunjanImage, (canvas.width - 100) / 2, (canvas.height - 100) / 2, 100, 100);
+}
 
+function drawSnacks() {
   snacks.forEach(snack => {
     if (snackImage.complete && snackImage.naturalWidth > 0) {
-      console.log('Drawing snack at:', snack.x, snack.y);
       ctx.drawImage(snackImage, snack.x, snack.y, 50, 50);
     } else {
-      console.log('Snack image not available. Drawing fallback circle.');
       ctx.fillStyle = 'orange';
       ctx.beginPath();
       ctx.arc(snack.x, snack.y, 25, 0, Math.PI * 2);
@@ -107,9 +116,34 @@ function spawnSnack() {
   });
 }
 
+function checkCollision() {
+  snacks.forEach((snack, index) => {
+    const dx = player.x - snack.x;
+    const dy = player.y - snack.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < 75) {
+      snacks.splice(index, 1);
+      score++;
+      scoreDisplay.textContent = `Score: ${score}`;
+      if (score === 5) {
+        setTimeout(() => alert('Happy Birthday Gunjan! 🎉 You won!'), 200);
+      }
+    }
+  });
+}
+
 function update() {
-  console.log('Update function running...');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawPlayer();
+  drawSnacks();
+  checkCollision();
+
+  if (keys['ArrowUp']) player.y -= player.speed;
+  if (keys['ArrowDown']) player.y += player.speed;
+  if (keys['ArrowLeft']) player.x -= player.speed;
+  if (keys['ArrowRight']) player.x += player.speed;
+
   requestAnimationFrame(update);
 }
 
@@ -118,3 +152,6 @@ document.getElementById('startButton').onclick = () => {
   for (let i = 0; i < 5; i++) spawnSnack();
   update();
 };
+
+document.addEventListener('keydown', (e) => keys[e.key] = true);
+document.addEventListener('keyup', (e) => keys[e.key] = false);
