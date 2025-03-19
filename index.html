@@ -94,6 +94,13 @@
       }
     }
 
+    function startGame() {
+      for (let i = 0; i < 7; i++) spawnSnack();
+      for (let i = 0; i < 3; i++) spawnCoffee();
+      for (let i = 0; i < 4; i++) spawnPopcorn();
+      update();
+    }
+
     function drawPlayer() {
       ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
     }
@@ -153,9 +160,6 @@
 
     document.getElementById('startButton').onclick = () => {
       displayDialogue();
-      for (let i = 0; i < 7; i++) spawnSnack();
-      for (let i = 0; i < 3; i++) spawnCoffee();
-      for (let i = 0; i < 4; i++) spawnPopcorn();
     };
   </script>
 </body>
