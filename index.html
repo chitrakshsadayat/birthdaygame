@@ -155,6 +155,11 @@
       }
     }
 
+    function spawnSnack() { snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+    function spawnCoffee() { coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+    function spawnPopcorn() { popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+    function spawnKitkat() { kitkats.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
+
     function startGame() {
       startButton.style.display = 'none';
       for (let i = 0; i < 5; i++) { spawnSnack(); spawnCoffee(); spawnPopcorn(); spawnKitkat(); }
@@ -164,10 +169,6 @@
     function update() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(images['gunjan.png'], player.x, player.y, player.size, player.size);
-      drawSnacks();
-      drawCoffees();
-      drawPopcorns();
-      drawKitkats();
       requestAnimationFrame(update);
     }
 
