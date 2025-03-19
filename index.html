@@ -171,6 +171,18 @@
       requestAnimationFrame(update);
     }
 
+    function movePlayer(direction) {
+      if (direction === 'left') player.x -= player.speed;
+      if (direction === 'right') player.x += player.speed;
+      if (direction === 'up') player.y -= player.speed;
+      if (direction === 'down') player.y += player.speed;
+    }
+
+    document.getElementById('left').addEventListener('click', () => movePlayer('left'));
+    document.getElementById('right').addEventListener('click', () => movePlayer('right'));
+    document.getElementById('up').addEventListener('click', () => movePlayer('up'));
+    document.getElementById('down').addEventListener('click', () => movePlayer('down'));
+
     startButton.addEventListener('click', startGame);
   </script>
 </body>
