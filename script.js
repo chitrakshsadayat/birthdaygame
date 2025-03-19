@@ -11,9 +11,9 @@ gunjanImage.onerror = () => console.error('Failed to load Gunjan image. Check th
 
 const snacks = [];
 const snackImage = new Image();
-snackImage.src = 'snack.png';
+snackImage.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png'; // Using an online snack image
 snackImage.onload = () => console.log('Snack image loaded. Game is ready.');
-snackImage.onerror = () => console.error('Failed to load snack image.');
+snackImage.onerror = () => console.error('Failed to load snack image. Using fallback.');
 
 function drawPlayer() {
   if (!gunjanImage.complete || gunjanImage.naturalWidth === 0) {
@@ -22,7 +22,16 @@ function drawPlayer() {
   }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(gunjanImage, canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
-  snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 50, 50));
+  snacks.forEach(snack => {
+    if (snackImage.complete && snackImage.naturalWidth > 0) {
+      ctx.drawImage(snackImage, snack.x, snack.y, 50, 50);
+    } else {
+      ctx.fillStyle = 'orange';
+      ctx.beginPath();
+      ctx.arc(snack.x, snack.y, 25, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
 }
 
 function spawnSnack() {
@@ -30,6 +39,7 @@ function spawnSnack() {
 }
 
 function update() {
+  console.log('Game is running.');
   drawPlayer();
   requestAnimationFrame(update);
 }
