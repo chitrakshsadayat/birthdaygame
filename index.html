@@ -44,6 +44,26 @@
       font-size: 24px;
       color: #000;
     }
+
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      background: pink;
+      border: none;
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -51,6 +71,13 @@
   <button id="startButton">Bring it on</button>
   <div id="score">Score: 0</div>
   <audio id="backgroundMusic" src="aye-hip-hopper.mp3" loop></audio>
+  
+  <div class="controls">
+    <button class="control-btn" id="left">⬅</button>
+    <button class="control-btn" id="up">⬆</button>
+    <button class="control-btn" id="down">⬇</button>
+    <button class="control-btn" id="right">➡</button>
+  </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -147,16 +174,13 @@
       drawPlayer();
       drawSnacks();
       checkCollision();
-      if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
-      if (keys['ArrowDown'] && player.y + player.size < canvas.height) player.y += player.speed;
-      if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
-      if (keys['ArrowRight'] && player.x + player.size < canvas.width) player.x += player.speed;
       requestAnimationFrame(update);
     }
 
-    const keys = {};
-    document.addEventListener('keydown', (e) => keys[e.key] = true);
-    document.addEventListener('keyup', (e) => keys[e.key] = false);
+    document.getElementById('left').addEventListener('click', () => player.x -= player.speed);
+    document.getElementById('right').addEventListener('click', () => player.x += player.speed);
+    document.getElementById('up').addEventListener('click', () => player.y -= player.speed);
+    document.getElementById('down').addEventListener('click', () => player.y += player.speed);
 
     document.getElementById('startButton').onclick = () => {
       displayDialogue();
