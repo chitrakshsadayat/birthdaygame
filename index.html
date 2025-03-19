@@ -64,13 +64,35 @@
     coldCoffeeImage.src = 'cold-coffee.png';
     const snackImage = new Image();
     snackImage.src = 'snack.png';
+    const popcornImage = new Image();
+    popcornImage.src = 'popcorn.png';
 
     const player = { x: canvas.width / 2, y: canvas.height / 2, size: 100, speed: 8 };
     let score = 0;
     const snacks = [];
     const coffees = [];
+    const popcorns = [];
     const scoreDisplay = document.getElementById('score');
     const backgroundMusic = document.getElementById('backgroundMusic');
+
+    const dialogues = [
+      "Sara: Hey Gunjan! Ready for an adventure?",
+      "Gunjan: Of course! Bring it on!",
+      "Sara: You'll have to collect all your favorite snacks! But beware, challenges await.",
+      "Gunjan: Challenges? I thought it was just snacks and coffee.",
+      "Sara: Trust me, it's going to be fun! Let's go!"
+    ];
+
+    let currentDialogue = 0;
+
+    function displayDialogue() {
+      if (currentDialogue < dialogues.length) {
+        alert(dialogues[currentDialogue]);
+        currentDialogue++;
+      } else {
+        startGame();
+      }
+    }
 
     function drawPlayer() {
       ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
@@ -79,6 +101,7 @@
     function drawSnacks() {
       snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 50, 50));
       coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 50, 50));
+      popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 50, 50));
     }
 
     function spawnSnack() {
@@ -87,6 +110,10 @@
 
     function spawnCoffee() {
       coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
+    }
+
+    function spawnPopcorn() {
+      popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
     }
 
     function checkCollision() {
@@ -98,20 +125,12 @@
           snacks.splice(index, 1);
           score++;
           scoreDisplay.textContent = `Score: ${score}`;
-          if (score === 5) {
-            setTimeout(() => alert('Happy Birthday Gunjan! 🎉 You won!'), 200);
+          if (score === 10) {
+            setTimeout(() => {
+              alert('Happy Birthday Gunjan! 🎉 You won!');
+              backgroundMusic.play();
+            }, 200);
           }
-        }
-      });
-
-      coffees.forEach((coffee, index) => {
-        const dx = player.x - coffee.x;
-        const dy = player.y - coffee.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 75) {
-          coffees.splice(index, 1);
-          player.speed += 4;
-          setTimeout(() => player.speed -= 4, 5000);
         }
       });
     }
@@ -121,12 +140,10 @@
       drawPlayer();
       drawSnacks();
       checkCollision();
-
       if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
       if (keys['ArrowDown'] && player.y + player.size < canvas.height) player.y += player.speed;
       if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
       if (keys['ArrowRight'] && player.x + player.size < canvas.width) player.x += player.speed;
-
       requestAnimationFrame(update);
     }
 
@@ -135,10 +152,10 @@
     document.addEventListener('keyup', (e) => keys[e.key] = false);
 
     document.getElementById('startButton').onclick = () => {
-      backgroundMusic.play();
-      for (let i = 0; i < 5; i++) spawnSnack();
-      for (let i = 0; i < 2; i++) spawnCoffee();
-      update();
+      displayDialogue();
+      for (let i = 0; i < 7; i++) spawnSnack();
+      for (let i = 0; i < 3; i++) spawnCoffee();
+      for (let i = 0; i < 4; i++) spawnPopcorn();
     };
   </script>
 </body>
