@@ -147,20 +147,20 @@
       }
     }
 
-    function spawnSnack() { snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-    function spawnCoffee() { coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-    function spawnPopcorn() { popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-    function spawnKitkat() { kitkats.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-
-    function drawSnacks() { snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 50, 50)); }
-    function drawCoffees() { coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 50, 50)); }
-    function drawPopcorns() { popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 50, 50)); }
-    function drawKitkats() { kitkats.forEach(kitkat => ctx.drawImage(kitkatImage, kitkat.x, kitkat.y, 50, 50)); }
-
     function startGame() {
       startButton.style.display = 'none';
       for (let i = 0; i < 5; i++) { spawnSnack(); spawnCoffee(); spawnPopcorn(); spawnKitkat(); }
       update();
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
+      drawSnacks();
+      drawCoffees();
+      drawPopcorns();
+      drawKitkats();
+      requestAnimationFrame(update);
     }
 
     startButton.addEventListener('click', startGame);
