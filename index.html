@@ -39,11 +39,15 @@
 
     #score {
       position: absolute;
-      top: 70px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 24px;
-      color: #000;
+      font-size: 30px;
+      font-weight: bold;
+      color: #ff4500;
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 12px;
     }
 
     .dialogue-box {
@@ -59,6 +63,27 @@
       border-radius: 12px;
       text-align: center;
     }
+
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+    }
+
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      background: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -67,6 +92,13 @@
   <div id="score">Score: 0</div>
   <audio id="backgroundMusic" src="aye-hip-hopper.mp3" loop></audio>
   <div class="dialogue-box" id="dialogueBox"></div>
+
+  <div class="controls">
+    <button class="control-btn" id="left">⬅</button>
+    <button class="control-btn" id="up">⬆</button>
+    <button class="control-btn" id="down">⬇</button>
+    <button class="control-btn" id="right">➡</button>
+  </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -85,7 +117,7 @@
     const kitkatImage = new Image();
     kitkatImage.src = 'kitkat.png';
 
-    const player = { x: canvas.width / 2, y: canvas.height / 2, size: 120, speed: 8 };
+    const player = { x: canvas.width / 2, y: canvas.height / 2, size: 100, speed: 8 };
     let score = 0;
     const snacks = [];
     const coffees = [];
@@ -128,34 +160,19 @@
     }
 
     function drawSnacks() {
-      snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 80, 80));
-      coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 80, 80));
-      popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 80, 80));
-      kitkats.forEach(kitkat => ctx.drawImage(kitkatImage, kitkat.x, kitkat.y, 80, 80));
+      snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 70, 70));
+      coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 70, 70));
+      popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 70, 70));
+      kitkats.forEach(kitkat => ctx.drawImage(kitkatImage, kitkat.x, kitkat.y, 70, 70));
     }
 
-    function spawnSnack() { snacks.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-    function spawnCoffee() { coffees.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-    function spawnPopcorn() { popcorns.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-    function spawnKitkat() { kitkats.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height }); }
-
     function checkCollision() {
-      [...snacks, ...coffees, ...popcorns, ...kitkats].forEach((item, index, array) => {
-        const dx = player.x - item.x;
-        const dy = player.y - item.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 90) {
-          array.splice(index, 1);
-          score++;
-          scoreDisplay.textContent = `Score: ${score}`;
-          if (score === 20) {
-            setTimeout(() => {
-              alert('Happy Birthday Gunjan! 🎉 You won!');
-              backgroundMusic.play();
-            }, 200);
-          }
-        }
-      });
+      if (!snacks.length && !coffees.length && !popcorns.length && !kitkats.length) {
+        setTimeout(() => {
+          alert('Happy Birthday Gunjan! 🎉 You won!');
+          backgroundMusic.play();
+        }, 200);
+      }
     }
 
     function update() {
@@ -166,9 +183,11 @@
       requestAnimationFrame(update);
     }
 
-    document.getElementById('startButton').onclick = () => {
-      showDialogue();
-    };
+    document.getElementById('left').addEventListener('click', () => player.x -= player.speed);
+    document.getElementById('right').addEventListener('click', () => player.x += player.speed);
+    document.getElementById('up').addEventListener('click', () => player.y -= player.speed);
+    document.getElementById('down').addEventListener('click', () => player.y += player.speed);
+
     showDialogue();
   </script>
 </body>
