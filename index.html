@@ -52,7 +52,7 @@
 
     .dialogue-box {
       position: absolute;
-      bottom: 80px;
+      bottom: 120px;
       left: 50%;
       transform: translateX(-50%);
       width: 80%;
@@ -88,7 +88,7 @@
 </head>
 <body>
   <canvas id="gameCanvas"></canvas>
-  <button id="startButton">Bring it on</button>
+  <button id="startButton">Start Game</button>
   <div id="score">Score: 0</div>
   <audio id="backgroundMusic" src="aye-hip-hopper.mp3" loop></audio>
   <div class="dialogue-box" id="dialogueBox"></div>
@@ -125,6 +125,7 @@
     const kitkats = [];
     const scoreDisplay = document.getElementById('score');
     const dialogueBox = document.getElementById('dialogueBox');
+    const startButton = document.getElementById('startButton');
 
     const dialogues = [
       "Sara: Hey Gunjan! Ready for an adventure?",
@@ -143,27 +144,12 @@
         setTimeout(showDialogue, 3000);
       } else {
         dialogueBox.style.display = 'none';
-        startGame();
+        startButton.style.display = 'block';
       }
     }
 
-    function spawnSnack() {
-      snacks.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
-    function spawnCoffee() {
-      coffees.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
-    function spawnPopcorn() {
-      popcorns.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
-    function spawnKitkat() {
-      kitkats.push({ x: Math.random() * (canvas.width - 70), y: Math.random() * (canvas.height - 70) });
-    }
-
     function startGame() {
+      startButton.style.display = 'none';
       for (let i = 0; i < 7; i++) spawnSnack();
       for (let i = 0; i < 4; i++) spawnCoffee();
       for (let i = 0; i < 4; i++) spawnPopcorn();
@@ -171,24 +157,7 @@
       update();
     }
 
-    function update() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPlayer();
-      drawSnacks();
-      checkCollision();
-      requestAnimationFrame(update);
-    }
-
-    function drawPlayer() {
-      ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
-    }
-
-    function drawSnacks() {
-      snacks.forEach(snack => ctx.drawImage(snackImage, snack.x, snack.y, 70, 70));
-      coffees.forEach(coffee => ctx.drawImage(coldCoffeeImage, coffee.x, coffee.y, 70, 70));
-      popcorns.forEach(popcorn => ctx.drawImage(popcornImage, popcorn.x, popcorn.y, 70, 70));
-      kitkats.forEach(kitkat => ctx.drawImage(kitkatImage, kitkat.x, kitkat.y, 70, 70));
-    }
+    startButton.addEventListener('click', startGame);
 
     showDialogue();
   </script>
