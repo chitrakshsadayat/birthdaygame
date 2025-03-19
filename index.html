@@ -29,6 +29,7 @@ body, html {
   width: 100vw;
   height: 100vh;
   background-color: #a0d8ef;
+  border: 2px solid black;
 }
 
 #startButton {
@@ -51,6 +52,10 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+if (!ctx) {
+  console.error('Canvas context not found. Please check the canvas element.');
+}
+
 const gunjanImage = new Image();
 gunjanImage.src = 'gunjan.png';
 
@@ -59,21 +64,26 @@ gunjanImage.onerror = () => console.error('Failed to load Gunjan image. Check th
 
 const snacks = [];
 const snackImage = new Image();
-snackImage.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png'; // Using an online snack image
+snackImage.src = 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png';
 snackImage.onload = () => console.log('Snack image loaded. Game is ready.');
 snackImage.onerror = () => console.error('Failed to load snack image. Using fallback.');
 
 function drawPlayer() {
+  console.log('Attempting to draw player.');
   if (!gunjanImage.complete || gunjanImage.naturalWidth === 0) {
     console.error('Image not loaded, skipping draw.');
     return;
   }
+  console.log('Drawing player on canvas.');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(gunjanImage, canvas.width / 2 - 50, canvas.height / 2 - 50, 100, 100);
+
   snacks.forEach(snack => {
     if (snackImage.complete && snackImage.naturalWidth > 0) {
+      console.log('Drawing snack at:', snack.x, snack.y);
       ctx.drawImage(snackImage, snack.x, snack.y, 50, 50);
     } else {
+      console.log('Snack image not available. Drawing fallback circle.');
       ctx.fillStyle = 'orange';
       ctx.beginPath();
       ctx.arc(snack.x, snack.y, 25, 0, Math.PI * 2);
