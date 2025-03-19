@@ -147,12 +147,14 @@
       }
     }
 
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(gunjanImage, player.x, player.y, player.size, player.size);
+      requestAnimationFrame(update);
+    }
+
     function startGame() {
       startButton.style.display = 'none';
-      for (let i = 0; i < 7; i++) spawnSnack();
-      for (let i = 0; i < 4; i++) spawnCoffee();
-      for (let i = 0; i < 4; i++) spawnPopcorn();
-      for (let i = 0; i < 4; i++) spawnKitkat();
       update();
     }
 
